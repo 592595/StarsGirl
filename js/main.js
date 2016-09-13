@@ -1,87 +1,82 @@
-/**
- * Created by 潘佳慧 on 2016/9/13.
- */
 var can;
 var ctx;
 
 var w;
 var h;
 
-var girlPic=new Image();
-var starPic=new Image();
+var padLeft = 100;
+var padTop = 100;
 
-var num=60;
-var stars=[];
+var girlWidth = 600;
+var girlHeight = 300;
 
-var lastTime;
 var deltaTime;
+var lastTime;
 
-var switchy=false;
-var life=0;
-function init(){
-    //console.log("a");
-    can=document.getElementById("canvas");
-    ctx=can.getContext("2d");
+var girlPic = new Image();
+var starPic = new Image();
 
-    w=can.width;
-    h=can.height;
+var stars = [];
+var num = 30;
 
-    document.addEventListener('mousemove',mousemove,false);//添加鼠标移动事件的监听
+var alive = 0;
 
-    girlPic.src="src/girl.jpg";
-    starPic.src="src/star.png";
+var switchy = false;
 
-    for(var i=0;i<num;i++)
-    {
-        var obj=new starObj();
-        stars.push(obj);
-        stars[i].init();
-    }
-    lastTime=Date.now();//获取当前时间
-  //  console.log(w);
+function init() {
+	can = document.getElementById("canvas");
+	ctx = can.getContext("2d");
 
-    gameloop();
+	w = can.width;
+	h = can.height;
 
-}
-document.body.onload=init;
+	document.addEventListener('mousemove', mousemove, false);
 
-function gameloop(){
-    window.requestAnimationFrame(gameloop);
+	girlPic.src = "src/girl.jpg";
+	starPic.src = "src/star.png";
 
-    var now=Date.now();
-    deltaTime=now-lastTime;
-    lastTime=now;
+	for (var i = 0; i < num; i++) {
+		stars[i] = new starObj();
+		stars[i].init();
+	}
 
-    console.log(deltaTime);
-    drawBackground();
-    drawGirl();
-    drawStars();
-}
-//绘制背景
-function drawBackground(){
-    ctx.fillStyle="#393550";
-    ctx.fillRect(0,0,w,h);
+	lastTime = Date.now();
+	gameLoop();
 }
 
-function drawGirl(){
-    ctx.drawImage(girlPic,100,150,600,300);
+function gameLoop() {
+	window.requestAnimFrame(gameLoop);
+	var now = Date.now();
+	deltaTime = now - lastTime;
+	lastTime = now;
+
+	fillCanvas();
+	drawGirl();
+
+	drawStars();
+
+	aliveUpdate();
 }
 
-function mousemove(e){
-    if(e.offsetX || e.layerX){
-        var px = e.offsetX == undefined ? e.layerX : e.offsetX;
-        var py = e.offsetY == undefined ? e.layerY : e.offsetY;
-       // console.log(px);
-        if(px>100&&px<700&&py>150&&py<450)
-        {
-            switchy=true;
+function fillCanvas() {
+	ctx.fillStyle = "#393550";
+	ctx.fillRect(0, 0, w, h);
+}
 
-        }
-        else
-        {
-            switchy=false;
-        }
-        console.log(switchy);
+function drawGirl() {
+	ctx.drawImage(girlPic, padLeft, padTop, girlWidth, girlHeight);
+}
 
-    }
+function mousemove(e) {
+	if (e.offsetX || e.layerX) {
+
+		var px = e.offsetX == undefined ? e.layerX : e.offsetX;
+		var py = e.offsetY == undefined ? e.layerY : e.offsetY;
+
+		if (px > padLeft && px < (padLeft + girlWidth) && py > padTop && py < (padTop + girlHeight)) {
+			switchy = true;
+		} else {
+			switchy = false;
+		}
+	}
 }
